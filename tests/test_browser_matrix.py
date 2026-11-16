@@ -108,6 +108,15 @@ def test_toolbar_caret_and_file_icon_dimensions(open_browser, server):
         expect(caret).to_have_css("background-color", "rgb(100, 113, 135)")
         for dimension in ("width", "height"):
             expect(control.locator(".caret-box")).to_have_css(dimension, "18px")
+    new_icon = page.get_by_role("button", name="New", exact=True).locator(".plus")
+    upload_icon = page.locator("#upload-menu summary img")
+    expect(new_icon).to_have_css("width", "15px")
+    expect(new_icon).to_have_css("height", "15px")
+    new_box = new_icon.bounding_box()
+    upload_box = upload_icon.bounding_box()
+    assert new_box["y"] + new_box["height"] / 2 == pytest.approx(
+        upload_box["y"] + upload_box["height"] / 2, abs=0.5
+    )
     icons = [
         ('#tree img[src$="/files.svg"]', "20px"),
         ('#tree img[src$="/folder.svg"]', "20px"),

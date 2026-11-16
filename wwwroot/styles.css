@@ -48,7 +48,11 @@ header { padding: 8px 15px 11px; border-bottom: 1px solid var(--line); }
 .spacer { flex: 1; }
 .switch { padding: 2px; gap: 0; }
 button[aria-pressed=true] { background: var(--active); }
-.plus { font-size: 20px; line-height: 1; }
+.plus {
+  width: 15px; height: 15px; flex: 0 0 15px; color: #647187;
+  background: linear-gradient(currentColor, currentColor) center / 11px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1px 11px no-repeat;
+}
 details { position: relative; }
 summary { list-style: none; }
 summary::-webkit-details-marker { display: none; }
