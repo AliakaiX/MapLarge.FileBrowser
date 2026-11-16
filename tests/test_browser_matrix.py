@@ -122,6 +122,30 @@ def test_toolbar_caret_and_file_icon_dimensions(open_browser, server):
     assert not errors
 
 
+def expect_popover_in_view(page, popover):
+    page.wait_for_function("""popover => {
+        const { left, right, width } = popover.getBoundingClientRect();
+        return width > 0 && left >= -1 && right <= document.documentElement.clientWidth + 1;
+    }""", arg=popover.element_handle())
+
+
+def test_toolbar_popovers_fit_with_wider_text_and_after_resize(open_browser, server):
+    page, errors = open_browser(viewport=(390, 640))
+    open_view(page, server)
+    page.add_style_tag(content=".toolbar summary { font-size: 18px; }")
+    date = page.locator("#dates")
+    page.locator("#date-menu summary").click()
+    page.get_by_role("button", name="Custom date range").click()
+    expect(page.locator("#from-date")).to_be_focused()
+    page.set_viewport_size({"width": 320, "height": 640})
+    expect_popover_in_view(page, date)
+    page.keyboard.press("Escape")
+    page.locator("#upload-menu summary").click()
+    expect_popover_in_view(page, page.locator("#upload-menu .popover"))
+    assert page.evaluate("document.documentElement.scrollWidth") == 320
+    assert not errors
+
+
 @pytest.mark.parametrize("engine", ENGINES)
 @pytest.mark.parametrize("viewport", VIEWPORTS, ids=["desktop", "tablet", "phone", "small-phone"])
 def test_responsive_layout_navigation_and_menus(engine, viewport, open_browser, server):
@@ -136,16 +160,12 @@ def test_responsive_layout_navigation_and_menus(engine, viewport, open_browser, 
         page.locator(selector + " summary").click()
         popover = page.locator(selector + " .popover")
         expect(popover).to_be_visible()
-        box = popover.bounding_box()
-        assert box["x"] >= -1
-        assert box["x"] + box["width"] <= viewport[0] + 1
+        expect_popover_in_view(page, popover)
         page.keyboard.press("Escape")
         expect(popover).to_be_hidden()
     page.locator("#date-menu summary").click()
     page.get_by_role("button", name="Custom date range").click()
-    custom = page.locator("#dates").bounding_box()
-    assert custom["x"] >= -1
-    assert custom["x"] + custom["width"] <= viewport[0] + 1
+    expect_popover_in_view(page, page.locator("#dates"))
     page.keyboard.press("Escape")
     panel = menu(page, "Project Brief.pdf")
     box = panel.bounding_box()

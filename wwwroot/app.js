@@ -276,6 +276,7 @@ function showFilters(s) {
       navigate({ from, to });
     });
     date.append(form);
+    keepToolbarPopoverInView($('date-menu'));
   }
 }
 function notice(title, detail, kind) {
@@ -437,10 +438,26 @@ for (const [button, input] of [['upload-files', 'file-input'], ['upload-folder',
   $(button).onclick = () => { $('upload-menu').open = false; $(input).click(); };
   $(input).onchange = () => upload($(input));
 }
-const details = [...document.querySelectorAll('details')];
-for (const panel of details) panel.querySelector('summary').addEventListener('click', () => {
-  for (const other of details) if (other !== panel) other.open = false;
-});
+function keepToolbarPopoverInView(panel) {
+  if (!panel.open) return;
+  const popover = panel.querySelector('.popover');
+  popover.style.left = '';
+  popover.style.right = '';
+  const { left, right } = popover.getBoundingClientRect();
+  const viewportWidth = document.documentElement.clientWidth;
+  if (left >= 0 && right <= viewportWidth) return;
+  const clampedLeft = Math.max(0, Math.min(left, viewportWidth - (right - left)));
+  const panelLeft = panel.getBoundingClientRect().left + panel.clientLeft;
+  popover.style.left = (clampedLeft - panelLeft) + 'px';
+  popover.style.right = 'auto';
+}
+const details = [...document.querySelectorAll('.toolbar details')];
+for (const panel of details) {
+  panel.querySelector('summary').addEventListener('click', () => {
+    for (const other of details) if (other !== panel) other.open = false;
+  });
+  panel.addEventListener('toggle', () => keepToolbarPopoverInView(panel));
+}
 document.addEventListener('click', event => {
   if (!$('item-menu').contains(event.target) && !event.target.closest('.item-action')) closeMenu();
   for (const panel of details) if (!event.composedPath().includes(panel)) panel.open = false;
@@ -453,7 +470,10 @@ document.addEventListener('keydown', event => {
     panel.querySelector('summary').focus();
   }
 });
-window.addEventListener('resize', () => closeMenu());
+window.addEventListener('resize', () => {
+  closeMenu();
+  for (const panel of details) keepToolbarPopoverInView(panel);
+});
 window.addEventListener('scroll', () => closeMenu(), { passive: true });
 window.addEventListener('popstate', refresh);
 refresh();
