@@ -30,6 +30,8 @@ Open `MapLarge.FileBrowser.sln` in Visual Studio or Rider. Run the `MapLarge.Fil
 
 ## Verify changes
 
+For every feature, addition, bug fix, or other change, review the affected test coverage. Add or update tests in the same PR whenever existing tests do not cover the new or changed behavior. Use xUnit for filesystem and service logic, Playwright for browser-facing behavior, and both when the change spans those layers.
+
 - Run `dotnet test MapLarge.FileBrowser.sln -c Release` from the repository root. xUnit covers browse, search, path validation, file operations, conflicts, cancellation, and concurrent uploads.
 - After installing the Playwright browsers, run `python -m pytest tests/test_browser_matrix.py -k "not visual_baseline"` from the repository root in the test virtual environment. Use this for dashboard, static asset, and browser-facing API changes.
 - For API changes, run `python tests/http_test.py` on a system that permits symlink creation. The suite covers HTTP status codes and headers, ranges, CORS and origin checks, and filesystem behavior through Kestrel.
