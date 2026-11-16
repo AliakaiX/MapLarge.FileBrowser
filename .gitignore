@@ -1,0 +1,32 @@
+# .NET build, test, and publish output
+[Bb]in/
+[Oo]bj/
+artifacts/
+[Tt]est[Rr]esults/
+*.trx
+
+# Visual Studio and ASP.NET Core local settings
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.publishsettings
+
+# Rider and ReSharper local settings and caches
+.idea/
+_ReSharper*/
+*.DotSettings.user
+
+# Python and Playwright test output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.test-env/
+.venv/
+playwright-report/
+playwright/.cache/
+
+# OS metadata
+.DS_Store
+Thumbs.db
