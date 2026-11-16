@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Files</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preload" as="image" href="/icons/download.svg">
+  <link rel="preload" as="image" href="/icons/copy_link.svg">
+  <link rel="preload" as="image" href="/icons/rename.svg">
+  <link rel="preload" as="image" href="/icons/make-a-copy.svg">
+  <link rel="preload" as="image" href="/icons/move-to.svg">
+  <link rel="preload" as="image" href="/icons/delete.svg">
+  <link rel="preload" as="image" href="/icons/completed.svg">
+  <link rel="preload" as="image" href="/icons/close-x.svg">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <aside aria-label="Folders"><nav id="tree" aria-label="Folder navigation"></nav></aside>
+    <main>
+      <header>
+        <div class="top">
+          <div class="location"><nav id="breadcrumbs" aria-label="Breadcrumb"></nav>
+            <button id="copy-location" class="icon-button" aria-label="Copy folder link"><img src="/icons/copy_link.svg" alt=""><span class="tooltip" aria-hidden="true">Copy link</span></button>
+          </div>
+          <form id="search" role="search">
+            <input id="query" type="search" aria-label="Search files" placeholder="Search files…" maxlength="200">
+            <button class="icon-button" aria-label="Search"><img src="/icons/search.svg" alt=""></button>
+          </form>
+        </div>
+        <div class="toolbar">
+          <button id="new-folder"><span class="plus" aria-hidden="true">+</span> New</button>
+          <details id="type-menu"><summary>Types <span class="caret-box" aria-hidden="true"><span class="caret"></span></span></summary><div class="popover" id="types"></div></details>
+          <details id="date-menu"><summary>Modified <span class="caret-box" aria-hidden="true"><span class="caret"></span></span></summary><div class="popover" id="dates"></div></details>
+          <div class="spacer"></div>
+          <details id="upload-menu" class="right"><summary><img src="/icons/upload.svg" alt=""> Upload <span class="caret-box" aria-hidden="true"><span class="caret"></span></span></summary>
+            <div class="popover">
+              <button id="upload-files"><img src="/icons/upload-files.svg" alt="">File upload</button>
+              <button id="upload-folder"><img src="/icons/upload-folders.svg" alt="">Folder upload</button>
+            </div>
+          </details>
+          <div class="switch" aria-label="View">
+            <button id="list-view" class="icon-button" aria-label="List view"><img src="/icons/list-view.svg" alt=""></button>
+            <button id="grid-view" class="icon-button" aria-label="Grid view"><img src="/icons/grid-view.svg" alt=""></button>
+          </div>
+        </div>
+      </header>
+      <section id="results" aria-label="Files and folders">
+        <div id="results-note" role="status" hidden></div>
+        <div id="headings" class="columns"></div>
+        <div id="entries"></div>
+        <div id="empty" hidden></div>
+      </section>
+      <footer><span id="counts"></span><span id="total"></span></footer>
+    </main>
+  </div>
+  <input type="file" id="file-input" multiple hidden>
+  <input type="file" id="folder-input" webkitdirectory multiple hidden>
+  <div id="item-menu" class="popover item-menu" hidden></div>
+  <dialog id="action-dialog">
+    <form id="action-form">
+      <h2 id="dialog-title"></h2>
+      <p id="dialog-description"></p>
+      <label id="dialog-label" for="destination"></label>
+      <input id="destination" autocomplete="off">
+      <p id="dialog-error" role="alert" hidden></p>
+      <div class="dialog-buttons"><button type="button" id="cancel-action">Cancel</button><button id="confirm-action" class="primary">Save</button></div>
+    </form>
+  </dialog>
+  <div id="notice" class="notice" role="status" hidden></div>
+</body>
+</html>
